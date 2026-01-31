@@ -13,6 +13,7 @@
     "@codemirror/lang-markdown": "^6.2.0",
     "@codemirror/state": "^6.3.0",
     "@codemirror/view": "^6.21.0",
+    "@floating-ui/dom": "^1.7.5",
     "@tiptap/extension-color": "^3.18.0",
     "@tiptap/extension-font-family": "^3.18.0",
     "@tiptap/extension-highlight": "^3.18.0",
