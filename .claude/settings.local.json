@@ -13,7 +13,15 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(vercel --version:*)",
+      "Bash(vercel login --help:*)",
+      "Bash(vercel:*)",
+      "Bash(gh --version:*)",
+      "Bash(brew --version:*)",
+      "Bash(brew install:*)",
+      "Bash(git push:*)",
+      "Bash(ping:*)"
     ]
   }
 }

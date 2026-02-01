@@ -27,8 +27,19 @@ export function useMarkdown(content: string, settings: Settings) {
       blocks = parseHTML(content)
     }
 
+    console.log('🔍 [useMarkdown] 解析结果:', {
+      总blocks数: blocks.length,
+      blocks类型: blocks.map(b => b.type),
+      前3个blocks: blocks.slice(0, 3),
+    })
+
     // 分页
     const cards = paginate(blocks, settings)
+
+    console.log('🔍 [useMarkdown] 分页结果:', {
+      总卡片数: cards.length,
+      每页blocks数: cards.map(c => c.blocks.length),
+    })
 
     return { blocks, cards }
   }, [content, settings])

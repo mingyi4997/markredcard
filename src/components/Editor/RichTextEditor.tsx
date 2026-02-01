@@ -14,6 +14,33 @@ import { PageBreak } from '@/extensions/PageBreak'
 import { useEditorStore } from '@/stores/editorStore'
 import { RichTextToolbar } from './RichTextToolbar'
 import { convertEmojiInHTML } from '@/utils/emojiConverter'
+import MarkdownIt from 'markdown-it'
+
+// 创建 markdown-it 实例
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  breaks: true,
+})
+
+// 检测文本是否为 Markdown 格式
+function isMarkdown(text: string): boolean {
+  // 检测常见的 Markdown 语法
+  const mdPatterns = [
+    /^#{1,6}\s/m,          // 标题
+    /^\*\s/m,              // 无序列表
+    /^-\s/m,               // 无序列表
+    /^\d+\.\s/m,           // 有序列表
+    /^\>\s/m,              // 引用
+    /```/,                 // 代码块
+    /\*\*.+\*\*/,          // 加粗
+    /\*.+\*/,              // 斜体
+    /\[.+\]\(.+\)/,        // 链接
+    /!\[.+\]\(.+\)/,       // 图片
+  ]
+
+  return mdPatterns.some(pattern => pattern.test(text))
+}
 
 export function RichTextEditor() {
   const { markdown: content, setMarkdown, loadFromLocalStorage } = useEditorStore()
@@ -75,13 +102,27 @@ export function RichTextEditor() {
           }
         }
 
-        // 处理文本粘贴，转换小红书表情
+        // 处理文本粘贴
         const text = event.clipboardData?.getData('text/plain')
-        if (text && /\[[^\]]+\]/.test(text)) {
-          event.preventDefault()
-          const convertedText = convertEmojiInHTML(text)
-          editor?.commands.insertContent(convertedText)
-          return true
+        if (text) {
+          // 1. 检查是否为 Markdown 格式
+          if (isMarkdown(text)) {
+            event.preventDefault()
+            // 将 Markdown 转换为 HTML
+            const html = md.render(text)
+            // 转换小红书表情
+            const convertedHtml = convertEmojiInHTML(html)
+            editor?.commands.insertContent(convertedHtml)
+            return true
+          }
+
+          // 2. 转换小红书表情
+          if (/\[[^\]]+\]/.test(text)) {
+            event.preventDefault()
+            const convertedText = convertEmojiInHTML(text)
+            editor?.commands.insertContent(convertedText)
+            return true
+          }
         }
 
         return false
